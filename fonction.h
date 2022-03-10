@@ -1,3 +1,5 @@
+#ifndef fonction_H_INCLUDED
+#define fonction_H_INCLUDED
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -9,3 +11,4 @@ void aficherBack(Background b, SDL_Surface * screen);
 void animerBackground( Background * e);
 int collisionPP( Personne p, SDL_Surface * Masque);
 void scrolling (background * b, int direction, int pasAvancement);
+#endif
