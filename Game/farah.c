@@ -24,7 +24,7 @@ void initBackground(Background *B)
   B->camera.h = 336;
 
  //image
-  B->BgImg= IMG_Load("background projet.png");
+  B->BgImg= IMG_Load("background projet.png"); //load mta3 el background
   if (B->BgImg == NULL)
   {
     printf("Unable to load bitmap: %s\n", SDL_GetError());
@@ -41,14 +41,14 @@ void initBackground(Background *B)
   {
     printf("Mix_OpenAudio: %s\n", Mix_GetError());
   }
-  music=Mix_LoadMUS("musique.mp3");
+  music=Mix_LoadMUS("musique.mp3"); //el song eli fel jeux
   Mix_PlayMusic(music, -1);
   Mix_AllocateChannels(10);
   Mix_VolumeMusic(MIX_MAX_VOLUME);
 
 
    //clouds
-   B->clouds = IMG_Load("cloud.png");
+   B->clouds = IMG_Load("cloud.png"); // annimation clouds mate5demech :D
    B->pos_clouds.x=-1280;
    B->pos_clouds.y=-150;
    B->pos_clouds.w=B->clouds->w;
@@ -76,7 +76,7 @@ void scrolling(Background *B, bool b[],int pasmouv)
   if (b[0]) //right
   {
     
-    if(B->camera.x <2048-1280)
+    //if(B->camera.x <2048-1280)
       B->camera.x += pasmouv;
     
 
@@ -114,7 +114,7 @@ void scrolling(Background *B, bool b[],int pasmouv)
 }
 
 
-void animation_clouds(Background *B,SDL_Surface *screen)
+void animation_clouds(Background *B,SDL_Surface *screen) //animation clouds mate5demech hehe
 {//k taswira tji bech toufa n3awdouha melowel
 B->pos_clouds.x-=10;
 B->pos_clouds.y=B->PositionBg.y-130;
@@ -123,7 +123,7 @@ B->pos_clouds.x=-1000;
 }
 
 
-SDL_Color GetPixel(SDL_Surface *surface,int x,int y)
+/*SDL_Color GetPixel(SDL_Surface *surface,int x,int y)
 {
 	SDL_Color color ;
 	Uint32 col = 0 ;
@@ -151,7 +151,7 @@ SDL_Color col;
 
 col=GetPixel(Masque,p.poscreen.x+100,p.poscreen.y+220);
 
-printf("%d    %d   /////////// \n",p.poscreen.x,p.poscreen.y+220 );
+  printf("%d    %d   /////////// \n",p.poscreen.x,p.poscreen.y+220 );
   printf("%d    %d   %d\n",col.r,col.b,col.g );
 
 if ((col.r==0)&&(col.b==0)&&(col.g==0))
@@ -161,6 +161,116 @@ else
 return 0;
 
 
+}*/
+SDL_Color GetPixel(SDL_Surface *surface,int x,int y)
+{
+	SDL_Color color ;
+	Uint32 col = 0 ;
+	char* pPosition = ( char* ) surface->pixels ;
+	pPosition += ( surface->pitch * y ) ;
+	pPosition += ( surface->format->BytesPerPixel * x ) ;
+	memcpy ( &col , pPosition , surface->format->BytesPerPixel ) ;
+	SDL_GetRGB ( col , surface->format , &color.r , &color.g , &color.b ) ;
+	return ( color ) ;
+}
+int collisionPP(Personne *p,SDL_Surface *Masque)
+{
+  SDL_Color col2,col22;
+
+	col2=GetPixel(Masque,p->poscreen.x,p->poscreen.y);
+	col22=GetPixel(Masque,p->poscreen.x,p->poscreen.y);
+
+	if ((col22.r==0)&&(col22.b==0)&&(col22.g==0))
+  	 return 1;
+	else if ((col2.r==0)&&(col2.b==0)&&(col2.g==0))
+ 	 return 2;
+	else
+	 return 0;
+  printf("%d    %d   /////////// \n",p->poscreen.x,p->poscreen.y );
+  printf("%d    %d   %d\n",col2.r,col2.b,col2.g );
+  printf("%d    %d   /////////// \n",p->poscreen.x,p->poscreen.y );
+  printf("%d    %d   %d\n",col22.r,col22.b,col22.g );
+}
+
+//partage d'ecran
+//init left half of the screen
+void initpartage1(Background *B,Personne *p)
+{
+  B->PositionBg.x=0;
+  B->PositionBg.y=0;
+  B->PositionBg.w=1280/2;  
+  B->PositionBg.h=336;
+  B->camera.x=p->poscreen.x; //nrmlment 0 ama pos perso eli 3al issar deja yebda 0
+  B->camera.y=(336-336)/2; //(imagebackground.h-screen.h)/2
+  B->camera.w = 1280/2;  //screen.w/2   ye5ou chtar el ecran
+  B->camera.h = 336;    //screen.h  3ordh el screen
+B->BgImg= IMG_Load("bg.png");
+  if (B->BgImg == NULL)
+  {
+    printf("Unable to load bitmap: %s\n", SDL_GetError());
+  }
+
+
+
+}
+
+//init right half of the screen
+void initpartage2(Background *B1,Personne *p)
+{
+  B1->PositionBg.x=1280/2;
+  B1->PositionBg.y=0;
+  B1->PositionBg.w=1280/2;
+  B1->PositionBg.h=336;
+
+
+  
+
+  B1->camera.x=p->poscreen.x-p->posinit.x;  //posinit fel struct te5ou awel position yebda biha el perso eli 3al imin
+  B1->camera.y=0;
+  B1->camera.w = 1280/2;  //screen.w/2   ye5ou chtar el ecran
+  B1->camera.h = 336;     //screen.h 3ordh el ecran .... el tab eli tet7al lel affichage
+B1->BgImg= IMG_Load("bg.png");
+  if (B1->BgImg == NULL)
+  {
+    printf("Unable to load bitmap: %s\n", SDL_GetError());
+  }
+}
+
+//affichage
+void afficherpartage(Background *B,SDL_Surface *screen)
+{
+SDL_BlitSurface(B->BgImg,&(B->camera),screen,&(B->PositionBg));
 }
 
 
+//test
+void initp(Personne *p)
+{
+  p->positionperso.x=0;
+  p->positionperso.y=0;
+  p->posinit.x=p->positionperso.x;
+  p->posinit.y=p->positionperso.y;
+  p->PersoImg=IMG_Load("perso.png");
+  if (p->PersoImg == NULL)
+  {
+    printf("Unable to load bitmap: %s\n", SDL_GetError());
+  }
+}
+void afficherperso(Personne *p,SDL_Surface *screen)
+{
+SDL_BlitSurface(p->PersoImg,NULL,screen,&(p->positionperso));
+}
+void dep(Personne *p,bool b[])
+{
+
+  if (b[0])
+    p->positionperso.x+=8;
+
+  if(b[1]) //left
+     p->positionperso.x-=8;
+  if(b[2])//up
+   p->positionperso.y-=8;
+    if(b[3])//down
+   p->positionperso.y+=8;
+    
+}
