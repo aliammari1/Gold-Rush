@@ -17,22 +17,6 @@ typedef struct
   SDL_Surface *clouds;
 }Background;
 
-typedef struct
-{
-SDL_Surface *PersoImg;
-SDL_Rect positionperso;
-SDL_Rect poscreen;
-SDL_Rect posinit;
-SDL_Rect posprite;
-SDL_Surface *sprite;
-int direction;//0-droite,1-gauche
-int coin;
-double vitesse;
-double acceleration;
-int vie;
-int up;
-
-}Personne;
 
 
 void initBackground(Background *B);
@@ -56,10 +40,6 @@ SDL_Color GetPixel(SDL_Surface *surface,int x,int y);
         void initpartage2(Background *B1,Personne *p);
          void afficherpartage(Background *B,SDL_Surface *screen);
 
-//test
-void initp(Personne *p);
-void afficherperso(Personne *p,SDL_Surface *screen);
-void dep(Personne *p,bool b[]);
 
 
 
