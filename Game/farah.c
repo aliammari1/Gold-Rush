@@ -177,8 +177,8 @@ int collisionPP(Personne *p,SDL_Surface *Masque)
 {
   SDL_Color col2,col22;
 
-	col2=GetPixel(Masque,p->poscreen.x,p->poscreen.y);
-	col22=GetPixel(Masque,p->poscreen.x,p->poscreen.y);
+	col2=GetPixel(Masque,p->pos.x,p->pos.y);
+	col22=GetPixel(Masque,p->pos.x,p->pos.y);
 
 	if ((col22.r==0)&&(col22.b==0)&&(col22.g==0))
   	 return 1;
@@ -186,9 +186,9 @@ int collisionPP(Personne *p,SDL_Surface *Masque)
  	 return 2;
 	else
 	 return 0;
-  printf("%d    %d   /////////// \n",p->poscreen.x,p->poscreen.y );
+  printf("%d    %d   /////////// \n",p->pos.x,p->pos.y );
   printf("%d    %d   %d\n",col2.r,col2.b,col2.g );
-  printf("%d    %d   /////////// \n",p->poscreen.x,p->poscreen.y );
+  printf("%d    %d   /////////// \n",p->pos.x,p->pos.y );
   printf("%d    %d   %d\n",col22.r,col22.b,col22.g );
 }
 
@@ -200,7 +200,7 @@ void initpartage1(Background *B,Personne *p)
   B->PositionBg.y=0;
   B->PositionBg.w=1280/2;  
   B->PositionBg.h=336;
-  B->camera.x=p->poscreen.x; //nrmlment 0 ama pos perso eli 3al issar deja yebda 0
+  B->camera.x=p->pos.x; //nrmlment 0 ama pos perso eli 3al issar deja yebda 0
   B->camera.y=(336-336)/2; //(imagebackground.h-screen.h)/2
   B->camera.w = 1280/2;  //screen.w/2   ye5ou chtar el ecran
   B->camera.h = 336;    //screen.h  3ordh el screen
@@ -225,7 +225,7 @@ void initpartage2(Background *B1,Personne *p)
 
   
 
-  B1->camera.x=p->poscreen.x-p->posinit.x;  //posinit fel struct te5ou awel position yebda biha el perso eli 3al imin
+  B1->camera.x=p->pos.x-p->posinit.x;  //posinit fel struct te5ou awel position yebda biha el perso eli 3al imin
   B1->camera.y=0;
   B1->camera.w = 1280/2;  //screen.w/2   ye5ou chtar el ecran
   B1->camera.h = 336;     //screen.h 3ordh el ecran .... el tab eli tet7al lel affichage
@@ -243,34 +243,4 @@ SDL_BlitSurface(B->BgImg,&(B->camera),screen,&(B->PositionBg));
 }
 
 
-//test
-void initp(Personne *p)
-{
-  p->positionperso.x=0;
-  p->positionperso.y=0;
-  p->posinit.x=p->positionperso.x;
-  p->posinit.y=p->positionperso.y;
-  p->PersoImg=IMG_Load("perso.png");
-  if (p->PersoImg == NULL)
-  {
-    printf("Unable to load bitmap: %s\n", SDL_GetError());
-  }
-}
-void afficherperso(Personne *p,SDL_Surface *screen)
-{
-SDL_BlitSurface(p->PersoImg,NULL,screen,&(p->positionperso));
-}
-void dep(Personne *p,bool b[])
-{
 
-  if (b[0])
-    p->positionperso.x+=8;
-
-  if(b[1]) //left
-     p->positionperso.x-=8;
-  if(b[2])//up
-   p->positionperso.y-=8;
-    if(b[3])//down
-   p->positionperso.y+=8;
-    
-}
