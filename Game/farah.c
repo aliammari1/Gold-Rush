@@ -1,10 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_mixer.h>
-#include "farah.h"
+#include "header.h"
 
 
 
@@ -21,7 +15,7 @@ void initBackground(Background *B)
   B->camera.x=0;
   B->camera.y=0;
   B->camera.w = 1280;
-  B->camera.h = 336;
+  B->camera.h = 419;
 
  //image
   B->BgImg= IMG_Load("background projet.png"); //load mta3 el background
@@ -91,7 +85,7 @@ void scrolling(Background *B, bool b[],int pasmouv)
 
     if(B->camera.x  <= 0)
     {
-      B->camera.x  = 0;
+      B->camera.x  -= 0;
  
     }
   }
@@ -221,11 +215,10 @@ void initpartage2(Background *B1,Personne *p)
   B1->PositionBg.y=0;
   B1->PositionBg.w=1280/2;
   B1->PositionBg.h=336;
-
-
   
-
-  B1->camera.x=p->pos.x-p->posinit.x;  //posinit fel struct te5ou awel position yebda biha el perso eli 3al imin
+  
+  
+  B1->camera.x=p->pos.x;       //-p->posinit.x;  //posinit fel struct te5ou awel position yebda biha el perso eli 3al imin
   B1->camera.y=0;
   B1->camera.w = 1280/2;  //screen.w/2   ye5ou chtar el ecran
   B1->camera.h = 336;     //screen.h 3ordh el ecran .... el tab eli tet7al lel affichage
