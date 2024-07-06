@@ -20,16 +20,16 @@ int main()
     texte text;
     song song[5];
     Mix_Chunk *son;
-    son = Mix_LoadWAV("videoplayback.wav");
+    son = Mix_LoadWAV("assets/videoplayback.wav");
     screen = SDL_SetVideoMode(1280, 639, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 
     init_button_play(&play);
     init_button_settings(&settings);
     init_button_quit(&quit);
     init_button_full_screen(&full_screen);
-    init_image(&LOGO_GROUPE, 1, 523, "LOGO_GROUPE.jpg");
-    init_image(&team_logo, 1, 450, "team_logo.png");
-    init_image(&the_witcher, 0, 0, "witcher.jpg");
+    init_image(&LOGO_GROUPE, 1, 523, "assets/LOGO_GROUPE.jpg");
+    init_image(&team_logo, 1, 450, "assets/team_logo.png");
+    init_image(&the_witcher, 0, 0, "assets/witcher.jpg");
     init_back(&backg);
     init_texte(&text);
     init_logo(&logo);

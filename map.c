@@ -17,7 +17,7 @@
  */
 void initialiser_map(map *m, SDL_Surface *screen)
 {
-	m->map = IMG_Load("mini_backgg.png");
+	m->map = IMG_Load("assets/mini_backgg.png");
 	m->pos_map.x = 1000;
 	m->pos_map.y = 100;
 	m->mini_perso = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_DOUBLEBUF, 10, 10, 32, 0, 0, 0, 0);
@@ -64,7 +64,7 @@ void sauvegarder(int score, char nomjoueur[], char nomfichier[])
 	int id;
 	char nom[255];
 	f = fopen(nomfichier, "a+");
-	fnom = fopen("testnom.txt", "a+");
+	fnom = fopen("assets/testnom.txt", "a+");
 	if (f == NULL)
 	{
 		printf("Erreur lors de l'ouverture d'un fichier");
@@ -100,8 +100,8 @@ void meilleur(char nomfichier[], int score, char nomjoueur[])
 	int t[50];
 	int i = 0, s = 0;
 	char *tnom[50];
-	f = fopen("test.txt", "r");
-	fnom = fopen("testnom.txt", "r");
+	f = fopen("assets/test.txt", "r");
+	fnom = fopen("assets/testnom.txt", "r");
 	if (f == NULL)
 	{
 		printf("Erreur lors de l'ouverture d'un fichier");

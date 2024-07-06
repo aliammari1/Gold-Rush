@@ -13,7 +13,7 @@ void initBackground(Background *B)
   B->camera.h = 419;
 
   // image
-  B->BgImg = IMG_Load("background projet.png"); // load mta3 el background
+  B->BgImg = IMG_Load("assets/background_projet.png"); // load mta3 el background
   if (B->BgImg == NULL)
   {
     printf("Unable to load bitmap: %s\n", SDL_GetError());
@@ -28,13 +28,13 @@ void initBackground(Background *B)
   {
     printf("Mix_OpenAudio: %s\n", Mix_GetError());
   }
-  music = Mix_LoadMUS("musique.mp3"); // el song eli fel jeux
+  music = Mix_LoadMUS("assets/musique.mp3"); // el song eli fel jeux
   Mix_PlayMusic(music, -1);
   Mix_AllocateChannels(10);
   Mix_VolumeMusic(MIX_MAX_VOLUME);
 
   // clouds
-  B->clouds = IMG_Load("cloud.png"); // annimation clouds mate5demech :D
+  B->clouds = IMG_Load("assets/cloud.png"); // annimation clouds mate5demech :D
   B->pos_clouds.x = -1280;
   B->pos_clouds.y = -150;
   B->pos_clouds.w = B->clouds->w;
@@ -192,7 +192,7 @@ void initpartage2(Background *B1, Personne *p)
   B1->camera.y = 0;
   B1->camera.w = 1280 / 2; // screen.w/2   ye5ou chtar el ecran
   B1->camera.h = 336;      // screen.h 3ordh el ecran .... el tab eli tet7al lel affichage
-  B1->BgImg = IMG_Load("bg.png");
+  B1->BgImg = IMG_Load("assets/bg.png");
   if (B1->BgImg == NULL)
   {
     printf("Unable to load bitmap: %s\n", SDL_GetError());

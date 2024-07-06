@@ -19,7 +19,7 @@ int integration()
         const int speed = 5;
         bool b[4] = {0, 0, 0, 0};
         screen = SDL_SetVideoMode(1280, 419, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
-        SDL_Surface *Masque = SDL_LoadBMP("backgroundmasque.bmp");
+        SDL_Surface *Masque = SDL_LoadBMP("assets/backgroundmasque.bmp");
         initEnnemi(&e);
         initPerso(&p);
         initPerso2(&p2);

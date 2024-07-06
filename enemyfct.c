@@ -17,7 +17,7 @@
  */
 void initEnnemi(Ennemi *e)
 {
-	e->img = IMG_Load("e.png");
+	e->img = IMG_Load("assets/e.png");
 	e->pos1.x = 300;
 	e->pos1.y = 200;
 	e->pos2.x = 300;

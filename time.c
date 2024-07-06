@@ -66,7 +66,7 @@ int initTexttime(Text *T)
     strcpy(T->txt, "");
     T->positionText.x = 850;
     T->positionText.y = 20;
-    testload = loadFonttime(T, "angelina.TTF");
+    testload = loadFonttime(T, "assets/angelina.TTF");
     T->textSurface = NULL;
     return testload;
 }
@@ -85,7 +85,7 @@ int initTexttimeenig(Text *T)
     strcpy(T->txt, "");
     T->positionText.x = 0;
     T->positionText.y = 0;
-    testload = loadFonttime(T, "angelina.TTF");
+    testload = loadFonttime(T, "assets/angelina.TTF");
     T->textSurface = NULL;
     return testload;
 }

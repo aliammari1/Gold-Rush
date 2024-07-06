@@ -23,12 +23,12 @@ void enigme_jeu()
 	SDL_Color yellow = {255, 255, 0};
 	SDL_Color red = {125, 0, 0};
 	SDL_Color white = {0, 255, 255};			 ////black
-	police = TTF_OpenFont("Trajan Pro.ttf", 28); // l 20 hia l taille
-	policee = TTF_OpenFont("Trajan Pro.ttf", 30);
+	police = TTF_OpenFont("assets/Trajan Pro.ttf", 28); // l 20 hia l taille
+	policee = TTF_OpenFont("assets/Trajan Pro.ttf", 30);
 
 	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 	Mix_Chunk *soundbtn;
-	soundbtn = Mix_LoadWAV("mixkit-game-click-1114.wav");
+	soundbtn = Mix_LoadWAV("assets/mixkit-game-click-1114.wav");
 
 	/// score
 
@@ -81,7 +81,7 @@ void enigme_jeu()
 	position.y = 0;
 
 	SDL_Surface *image = NULL;					// decalaration d'une surface nommee image
-	image = IMG_Load("background projet1.png"); // load the image
+	image = IMG_Load("assets/background_projet1.png"); // load the image
 
 	init_enigmes(&e); /// bhs taateha enigme e w traajaa l enigme meebi
 
@@ -97,7 +97,7 @@ void enigme_jeu()
 
 	SDL_Surface *skull = NULL;
 
-	skull = IMG_Load("skulltest.png"); ////////////taswira taa animation
+	skull = IMG_Load("assets/skulltest.png"); ////////////taswira taa animation
 
 	SDL_Rect pos_sprite; ////position pr sprite
 
