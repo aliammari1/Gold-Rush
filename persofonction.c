@@ -21,7 +21,7 @@ void initPerso(Personne *p)
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 12; j++)
 		{
-			sprintf(nom_image, "images/%d/%d.png", i, j);
+			sprintf(nom_image, "assets/images/%d/%d.png", i, j);
 			p->img[i][j] = IMG_Load(nom_image);
 		}
 	p->pos.x = 0;
@@ -41,7 +41,7 @@ void initPerso2(Personne *p)
 	for (i = 0; i < 6; i++)
 		for (j = 0; j < 12; j++)
 		{
-			sprintf(nom_image, "images/%d/%d.png", i, j);
+			sprintf(nom_image, "assets/images/%d/%d.png", i, j);
 			p->img[i][j] = IMG_Load(nom_image);
 		}
 	p->pos.x = 200;
@@ -119,9 +119,9 @@ void choisir_perso(int *n, SDL_Surface *screen)
 	SDL_Event event1;
 	image p, p2;
 	SDL_Surface *backg;
-	p.img = IMG_Load("player.png");
-	p2.img = IMG_Load("player2.png");
-	backg = IMG_Load("background.jpg");
+	p.img = IMG_Load("assets/player.png");
+	p2.img = IMG_Load("assets/player2.png");
+	backg = IMG_Load("assets/background.jpg");
 	p.pos.x = 0;
 	p.pos.y = 100;
 	p2.pos.x = 400;

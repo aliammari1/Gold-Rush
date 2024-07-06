@@ -30,7 +30,7 @@ void init_enigmes(enigme *e)
     int reponse;
 
     FILE *f = NULL;
-    f = fopen("questionsans", "r"); // ouvrir
+    f = fopen("assets/questionsans", "r"); // ouvrir
     if (f != NULL)
     {
 
@@ -49,7 +49,7 @@ void init_enigmes(enigme *e)
 
     /// gener nombre aleatoire
 
-    f = fopen("questionsans", "r");
+    f = fopen("assets/questionsans", "r");
     if (f != NULL)
     {
 
@@ -78,10 +78,10 @@ void init_enigmes(enigme *e)
     e->positionreponse3.y = 350;
 
     TTF_Font *police = NULL;
-    police = TTF_OpenFont("Trajan Pro.ttf", 30);
+    police = TTF_OpenFont("assets/Trajan Pro.ttf", 30);
 
     TTF_Font *police1 = NULL;
-    police1 = TTF_OpenFont("Trajan Pro.ttf", 32);
+    police1 = TTF_OpenFont("assets/Trajan Pro.ttf", 32);
 
     SDL_Color white = {0, 255, 255}; // black
     SDL_Color red = {0, 255, 255};

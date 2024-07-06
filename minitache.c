@@ -11,7 +11,7 @@ int minitache(void)
 
     TTF_Init();
     TTF_Font *police = NULL;
-    police = TTF_OpenFont("alger.TTF", 90);
+    police = TTF_OpenFont("assets/alger.TTF", 90);
     SDL_Color couleur = {52, 201, 36};
     SDL_Color couleur_r = {187, 11, 11};
     SDL_Color couleur_n = {0, 0, 0};
@@ -39,10 +39,10 @@ int minitache(void)
     pos.x = 500;
     pos.y = 400;
     SDL_Event event;
-    fond = IMG_Load("puissance.png");
-    fond_n = IMG_Load("fond.png");
-    jaune = IMG_Load("jaune.png");
-    rouge = IMG_Load("rouge.png");
+    fond = IMG_Load("assets/puissance.png");
+    fond_n = IMG_Load("assets/fond.png");
+    jaune = IMG_Load("assets/jaune.png");
+    rouge = IMG_Load("assets/rouge.png");
     pos_ecran.x = 150;
     pos_ecran.y = 0;
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER);

@@ -11,7 +11,7 @@ void init_button_play(button *play)
     char nom_image[20];
     for (i = 0; i < 2; i++)
     {
-        sprintf(nom_image, "play%d.png", i);
+        sprintf(nom_image, "assets/play%d.png", i);
         play->img[i] = IMG_Load(nom_image);
     }
     play->frame = 0;
@@ -24,7 +24,7 @@ void init_button_settings(button *settings)
     char path[20];
     for (i = 0; i < 2; i++)
     {
-        sprintf(path, "settings%d.png", i);
+        sprintf(path, "assets/settings%d.png", i);
         settings->img[i] = IMG_Load(path);
     }
     settings->frame = 0;
@@ -37,7 +37,7 @@ void init_button_quit(button *quit)
     char path[20];
     for (i = 0; i < 2; i++)
     {
-        sprintf(path, "quit%d.png", i);
+        sprintf(path, "assets/quit%d.png", i);
         quit->img[i] = IMG_Load(path);
     }
     quit->frame = 0;
@@ -50,7 +50,7 @@ void init_button_full_screen(button *full_screen)
     char nom_image[20];
     for (i = 0; i < 2; i++)
     {
-        sprintf(nom_image, "fullscreen%d.png", i);
+        sprintf(nom_image, "assets/fullscreen%d.png", i);
         full_screen->img[i] = IMG_Load(nom_image);
     }
     full_screen->frame = 0;
@@ -63,7 +63,7 @@ void init_back(back *backg)
     char path[20];
     for (i = 0; i < 3; i++)
     {
-        sprintf(path, "back%d.jpg", i);
+        sprintf(path, "assets/back%d.jpg", i);
         backg->img[i] = IMG_Load(path);
     }
     backg->frame = 0;
@@ -76,7 +76,7 @@ void init_logo(logo *logo)
     char path[20];
     for (i = 0; i < 11; i++)
     {
-        sprintf(path, "logo/logo%d.png", i);
+        sprintf(path, "assets/logo/logo%d.png", i);
         logo->img[i] = IMG_Load(path);
     }
     logo->frame = 0;
@@ -90,7 +90,7 @@ void init_texte(texte *text)
     text->textcolor.r = 255;
     text->textcolor.g = 0;
     text->textcolor.b = 0;
-    text->font = TTF_OpenFont("arial.ttf", 50);
+    text->font = TTF_OpenFont("assets/arial.ttf", 50);
 }
 void display_texte(texte text, SDL_Surface *screen)
 {
@@ -178,13 +178,13 @@ void afficher_back(back backg, SDL_Surface *screen)
 void logo_music()
 {
     Mix_Chunk *logo_music;
-    logo_music = Mix_LoadWAV("audio.wav");
+    logo_music = Mix_LoadWAV("assets/audio.wav");
     Mix_PlayChannel(-1, logo_music, 0);
 }
 void back_music()
 {
     Mix_Music *music;
-    music = Mix_LoadMUS("Living Life In The Night - Cheriimoya- Sierra Kidd (Lyrics)[Mpgun.com].mp3");
+    music = Mix_LoadMUS("assets/Living Life In The Night - Cheriimoya- Sierra Kidd (Lyrics)[Mpgun.com].mp3");
     Mix_PlayMusic(music, 0);
 }
 void init_back_music(song song[])
@@ -193,12 +193,12 @@ void init_back_music(song song[])
     char path[20];
     for (i = 0; i < 5; i++)
     {
-        sprintf(path, "music/%d.mp3", i);
+        sprintf(path, "assets/music/%d.mp3", i);
         song[i].music = Mix_LoadMUS(path);
     }
     for (i = 0; i < 5; i++)
     {
-        sprintf(path, "song/song%d.png", i);
+        sprintf(path, "assets/song/song%d.png", i);
         song[i].songpic = IMG_Load(path);
     }
     for (i = 0; i < 5; i++)
