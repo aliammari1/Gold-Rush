@@ -7,7 +7,7 @@ CFLAGS := -g -Wall
 
 LIBS := -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer
 
-TARGET := prog
+TARGET := game
 
 all: $(TARGET)
 
