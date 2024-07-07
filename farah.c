@@ -173,7 +173,7 @@ void initpartage1(Background *B, Personne *p)
   B->camera.y = (336 - 336) / 2; //(imagebackground.h-screen.h)/2
   B->camera.w = 1280 / 2;        // screen.w/2   ye5ou chtar el ecran
   B->camera.h = 336;             // screen.h  3ordh el screen
-  B->BgImg = IMG_Load("bg.png");
+  B->BgImg = IMG_Load("assets/bg.png");
   if (B->BgImg == NULL)
   {
     printf("Unable to load bitmap: %s\n", SDL_GetError());

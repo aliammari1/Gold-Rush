@@ -148,7 +148,7 @@ void scrolling_menu_DOWN(button *play, button *settings, button *quit, int *n)
 void animation_back(back *backg)
 {
     (backg->frame)++;
-    if (backg->frame == 3)
+    if (backg->frame == 2)
         backg->frame = 0;
 }
 void animation_logo(logo *logo)
