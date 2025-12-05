@@ -1,4 +1,4 @@
-#include "header.h"
+#include "core.h"
 /**
  * @file mainclavier.c
  * @brief Testing Program.
@@ -11,7 +11,7 @@
  */
 int mainclavier()
 {
-	SDL_Surface *screen = NULL, *image, *a, *z, *e, *r, *t, *y, *u, *i, *o, *p, *q, *s, *d, *f, *g, *h, *j, *k, *l, *m, *w, *x, *c, *v, *b, *n, *ok, *texte, *delete;
+	SDL_Surface *screen = NULL, *image, *a, *z, *e, *r, *t, *y, *u, *i, *o, *p, *q, *s, *d, *f, *g, *h, *j, *k, *l, *m, *w, *x, *c, *v, *b, *n, *ok, *texte, *delete_btn;
 	SDL_Rect postionimage, posa, posz, pose, posr, post, posy, posu, posi, poso, posp, posq, poss,
 		posd, posf, posg, posh, posj, posk, posl, posm, posw, posx, posc, posv, posb, posn, posok, position_text = {100, 100}, posdelete;
 	SDL_Event event;
@@ -19,28 +19,19 @@ int mainclavier()
 	char rep[20] = "";
 	TTF_Font *police = NULL;
 	SDL_Color couleurBlanche = {255, 255, 255};
-	TTF_Init();
-	SDL_Init(SDL_INIT_VIDEO);
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		printf("unable to initialize SDL: %s\n", SDL_GetError());
-		return 1;
-	}
+	/* TTF already initialized in main.c */
+	/* SDL already initialized in main.c */
 	screen = SDL_SetVideoMode(1000, 562, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 	if (screen == NULL)
 	{
 		printf("unable to set video mode:%s\n", SDL_GetError());
 		return 1;
 	}
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1)
-	{
-		printf("%s", Mix_GetError());
-	}
 
 	image = IMG_Load("clavier/background.jpeg");
 	postionimage.x = 0;
 	postionimage.y = 0;
-	delete = IMG_Load("clavier/delete.png");
+	delete_btn = IMG_Load("clavier/delete.png");
 	a = IMG_Load("clavier/a.png");
 	z = IMG_Load("clavier/z.png");
 	e = IMG_Load("clavier/e.png");
@@ -155,7 +146,7 @@ int mainclavier()
 	SDL_BlitSurface(b, NULL, screen, &posb);
 	SDL_BlitSurface(n, NULL, screen, &posn);
 	SDL_BlitSurface(ok, NULL, screen, &posok);
-	SDL_BlitSurface(delete, NULL, screen, &posdelete);
+	SDL_BlitSurface(delete_btn, NULL, screen, &posdelete);
 	SDL_Flip(screen);
 
 	while (done)
@@ -332,8 +323,8 @@ int mainclavier()
 
 			{
 			}
-			if ((event.button.button == SDL_BUTTON_LEFT) && (event.button.x < posdelete.x + delete->w && event.button.x > posdelete.x) &&
-				(event.button.y < posdelete.y + delete->h && event.button.y > posdelete.y))
+			if ((event.button.button == SDL_BUTTON_LEFT) && (event.button.x < posdelete.x + delete_btn->w && event.button.x > posdelete.x) &&
+				(event.button.y < posdelete.y + delete_btn->h && event.button.y > posdelete.y))
 
 			{
 				rep[strlen(rep) - 1] = '\0';

@@ -3,7 +3,7 @@ SRCS := $(wildcard *.c)
 OBJS := $(SRCS:.c=.o)
 
 CC := gcc
-CFLAGS := -g -Wall
+CFLAGS := -g -Wall -Wextra -Wno-unused-parameter
 
 LIBS := -lSDL -lSDL_ttf -lSDL_image -lSDL_mixer
 
