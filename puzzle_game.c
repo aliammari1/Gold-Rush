@@ -28,7 +28,7 @@ void enigme_jeu()
 
 	Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096);
 	Mix_Chunk *soundbtn;
-	soundbtn = Mix_LoadWAV("assets/mixkit-game-click-1114.wav");
+	soundbtn = Mix_LoadWAV(SOUND_CLICK);
 
 	/// score
 

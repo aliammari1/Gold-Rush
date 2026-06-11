@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
+
+/* SDL 2 + the legacy-API shim are pulled in via minigame.h -> types.h. */
 #include "minigame.h"
 GameCell dropToken(SDL_Surface *screen, SDL_Surface *rouge, SDL_Event event, int t[6][7])
 {

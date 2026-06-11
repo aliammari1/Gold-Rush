@@ -1,0 +1,55 @@
+name: Publish to itch.io
+
+# Pushes the WebAssembly build to itch.io with butler on tags. Gated on the
+# BUTLER_API_KEY secret and the ITCH_TARGET var so it is a no-op until you
+# configure them (ITCH_TARGET = "user/game:html5").
+#
+# NEEDS COMPILE VERIFICATION before first real publish (see wasm-deploy.yml).
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: butler push (HTML5)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check butler credentials
+        id: gate
+        run: |
+          if [ -n "${{ secrets.BUTLER_API_KEY }}" ] && \
+             [ -n "${{ vars.ITCH_TARGET }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "BUTLER_API_KEY / ITCH_TARGET not set; skipping." >&2
+          fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.enabled == 'true'
+      - name: Set up Emscripten
+        if: steps.gate.outputs.enabled == 'true'
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.74
+      - name: Build wasm bundle
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          make wasm
+          mkdir -p public
+          cp game.html public/index.html
+          cp game.js game.wasm game.data public/
+      - name: Publish with butler
+        if: steps.gate.outputs.enabled == 'true'
+        uses: KikimoraGames/itch-publish@v0.0.3
+        with:
+          butlerApiKey: ${{ secrets.BUTLER_API_KEY }}
+          gameData: public
+          itchUsername: ${{ vars.ITCH_USERNAME }}
+          itchGameId: ${{ vars.ITCH_GAME_ID }}
+          buildChannel: html5
