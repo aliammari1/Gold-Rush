@@ -64,21 +64,28 @@ void saveScore(int score, char nomjoueur[], char nomfichier[])
 	FILE *f, *fnom;
 	int id;
 	char nom[255];
+	id = 0;
 	f = fopen(nomfichier, "a+");
-	fnom = fopen("assets/testnom.txt", "a+");
 	if (f == NULL)
 	{
 		printf("Erreur lors de l'ouverture d'un fichier");
+		return;
 	}
+	fnom = fopen("assets/testnom.txt", "a+");
 	if (fnom == NULL)
 	{
 		printf("Erreur lors de l'ouverture d'un fichier");
+		fclose(f);
+		return;
 	}
 	fprintf(f, "%d\n", score);
-	while (fscanf(fnom, "%d %s\n", &id, nom) != EOF)
+	while (fscanf(fnom, "%d %254s\n", &id, nom) != EOF)
 	{
 		printf("%d \n", id);
 	}
+	/* Reposition before writing: a read followed by a write on the same
+	 * stream without an intervening positioning call is undefined. */
+	fseek(fnom, 0, SEEK_END);
 	fprintf(fnom, "%d %s\n", id + 1, nomjoueur);
 
 	fclose(f);
