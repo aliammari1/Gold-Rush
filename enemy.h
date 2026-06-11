@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #ifndef ENEMY_H
 #define ENEMY_H
 

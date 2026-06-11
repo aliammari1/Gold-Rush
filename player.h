@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #ifndef PLAYER_H
 #define PLAYER_H
 
