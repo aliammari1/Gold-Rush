@@ -25,7 +25,7 @@ void initBackground(Background *background)
   {
     Mix_FreeMusic(music);
   }
-  music = Mix_LoadMUS("assets/musique.mp3");
+  music = Mix_LoadMUS(MUSIC_BACKGROUND);
   if (music != NULL)
   {
     Mix_PlayMusic(music, -1);
