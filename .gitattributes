@@ -1,0 +1,15 @@
+# Normalize line endings so the Linux CI builds the C sources and
+# Makefiles regardless of the contributor's OS.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.bmp binary
+*.gif binary
+*.svg text eol=lf
+*.ttf binary
+*.TTF binary
+*.wav binary
+*.mp3 binary
+*.ico binary
