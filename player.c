@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #include "core.h"
 /**
  * @file fonction.c
