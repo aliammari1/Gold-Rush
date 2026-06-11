@@ -1,0 +1,79 @@
+name: Docs
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    branches: [master]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install mkdocs-material
+        run: pip install -r requirements-docs.txt
+      - name: Build site (strict)
+        run: mkdocs build --strict
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-site
+          path: site
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+    # Only deploy from master and only when the Cloudflare secrets exist.
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Check Cloudflare credentials
+        id: cf
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && \
+             [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare secrets not set; skipping deploy." >&2
+          fi
+      - uses: actions/checkout@v4
+        if: steps.cf.outputs.enabled == 'true'
+      - uses: actions/download-artifact@v4
+        if: steps.cf.outputs.enabled == 'true'
+        with:
+          name: docs-site
+          path: site
+      - name: Deploy with Wrangler
+        if: steps.cf.outputs.enabled == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site --project-name=gold-rush-docs
