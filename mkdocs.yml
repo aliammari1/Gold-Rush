@@ -1,0 +1,51 @@
+site_name: Gold Rush
+site_description: A 2D platformer written in C with SDL.
+site_author: Ali Ammari
+repo_url: https://github.com/aliammari1/Gold-Rush
+repo_name: aliammari1/Gold-Rush
+copyright: Copyright &copy; 2025 Ali Ammari — Zlib licensed
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: amber
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: amber
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji
+
+nav:
+  - Home: index.md
+  - Building: building.md
+  - Controls: controls.md
+  - Architecture: architecture.md
+  - Connect Four AI: connect-four-ai.md
+  - Play in browser: play-in-browser.md
