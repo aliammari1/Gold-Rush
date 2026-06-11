@@ -82,8 +82,8 @@
 #define ASSET_PATH "assets/"
 #define FONT_DEFAULT "assets/angelina.TTF"
 #define FONT_LARGE "assets/Trajan Pro.ttf"
-#define MUSIC_BACKGROUND "assets/musique.mp3"
-#define SOUND_CLICK "assets/videoplayback.wav"
+#define MUSIC_BACKGROUND "assets/music/0.mp3"
+#define SOUND_CLICK "assets/Mouse_Click.wav"
 
 /* Timer Configuration */
 #define PUZZLE_TIME_LIMIT 16000  /* milliseconds */
