@@ -1,12 +1,16 @@
 #include "core.h"
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 /**
  * @brief Initialize SDL and game systems
  * @return 0 on success, 1 on failure
  */
 int initializeGameSystems(void)
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) < 0) {
         printf("SDL initialization failed: %s\n", SDL_GetError());
         return 1;
     }
@@ -28,15 +32,85 @@ int initializeGameSystems(void)
 }
 
 /**
+ * @brief Run a single frame: input, update, state-specific work, render.
+ *
+ * Extracted from the old blocking while-loop so the frame can be driven
+ * either by a native loop or by emscripten_set_main_loop() in the browser.
+ *
+ * NOTE (NEEDS COMPILE VERIFICATION): the gameplay/minigame branches below
+ * still call functions (game_loop, runConnectFourGame*) that contain their
+ * own blocking `while` loops. Under Emscripten those nested loops will also
+ * need to be converted to per-frame steppers; only the top-level loop is
+ * converted here.
+ */
+static void runOneFrame(GameEngine *gameEngine)
+{
+    Uint32 frameStart = SDL_GetTicks();
+    Uint32 frameTime;
+    SDL_Event event;
+
+    /* Handle input events */
+    while (SDL_PollEvent(&event)) {
+        GameEngine_HandleInput(gameEngine, &event);
+
+        if (event.type == SDL_QUIT) {
+            gameEngine->isRunning = 0;
+        }
+    }
+
+    /* Update game logic based on current state */
+    GameEngine_Update(gameEngine);
+
+    if (gameEngine->currentState == STATE_GAMEPLAY) {
+        game_loop(gameEngine);
+        GameEngine_SetState(gameEngine, STATE_MENU);
+    } else if (gameEngine->currentState == STATE_PUZZLE) {
+        /* Puzzle game would be called here */
+        GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
+    } else if (gameEngine->currentState == STATE_MINIGAME) {
+        /* Connect Four vs CPU would be launched here. */
+        GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
+    } else {
+        GameEngine_Render(gameEngine);
+    }
+
+    /* Frame rate limiting (native only; the browser paces via rAF). */
+#ifndef __EMSCRIPTEN__
+    frameTime = SDL_GetTicks() - frameStart;
+    if (frameTime < FRAME_TIME_MS) {
+        SDL_Delay(FRAME_TIME_MS - frameTime);
+    }
+#else
+    (void)frameStart;
+    (void)frameTime;
+#endif
+}
+
+#ifdef __EMSCRIPTEN__
+/* Adapter matching em_arg_callback_func; stops the loop on quit. */
+static void emscriptenFrame(void *arg)
+{
+    GameEngine *gameEngine = (GameEngine *)arg;
+    if (!gameEngine->isRunning || gameEngine->currentState == STATE_QUIT) {
+        emscripten_cancel_main_loop();
+        GameEngine_Destroy(gameEngine);
+        Mix_CloseAudio();
+        TTF_Quit();
+        SDL_Quit();
+        return;
+    }
+    runOneFrame(gameEngine);
+}
+#endif
+
+/**
  * @brief Main application entry point
  * @return 0 on success, 1 on error
  */
 int main(void)
 {
     GameEngine *gameEngine = NULL;
-    Uint32 frameStart = 0;
-    Uint32 frameTime = 0;
-    
+
     /* Initialize SDL and subsystems */
     if (initializeGameSystems() != 0) {
         return 1;
@@ -56,50 +130,18 @@ int main(void)
     GameEngine_SetState(gameEngine, STATE_MENU);
     gameEngine->isRunning = 1;
 
-    /* Main game loop - run until STATE_QUIT or isRunning is false */
+#ifdef __EMSCRIPTEN__
+    /* In the browser the main thread must return so the page stays
+     * responsive. Drive the game one frame per animation frame (fps=0).
+     * A blocking while-loop here would hang the tab. */
+    emscripten_set_main_loop_arg(emscriptenFrame, gameEngine, 0, 1);
+    /* emscripten_set_main_loop_arg with simulate_infinite_loop=1 does not
+     * return; cleanup happens in emscriptenFrame on quit. */
+    return 0;
+#else
+    /* Native blocking loop. */
     while (gameEngine->isRunning && gameEngine->currentState != STATE_QUIT) {
-        frameStart = SDL_GetTicks();
-
-        /* Handle input events */
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            GameEngine_HandleInput(gameEngine, &event);
-            
-            if (event.type == SDL_QUIT) {
-                gameEngine->isRunning = 0;
-            }
-        }
-
-        /* Update game logic based on current state */
-        GameEngine_Update(gameEngine);
-
-        /* Special handling for gameplay state - run actual game loop */
-        if (gameEngine->currentState == STATE_GAMEPLAY) {
-            game_loop(gameEngine);
-            /* After game loop, return to menu */
-            GameEngine_SetState(gameEngine, STATE_MENU);
-        }
-        /* Special handling for puzzle state */
-        else if (gameEngine->currentState == STATE_PUZZLE) {
-            /* Puzzle game would be called here */
-            GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
-        }
-        /* Special handling for minigame state */
-        else if (gameEngine->currentState == STATE_MINIGAME) {
-            /* Minigame would be called here - runConnectFourGame() */
-            GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
-        }
-        /* For menu and settings, use normal rendering */
-        else {
-            /* Render frame based on current state */
-            GameEngine_Render(gameEngine);
-        }
-
-        /* Frame rate limiting */
-        frameTime = SDL_GetTicks() - frameStart;
-        if (frameTime < FRAME_TIME_MS) {
-            SDL_Delay(FRAME_TIME_MS - frameTime);
-        }
+        runOneFrame(gameEngine);
     }
 
     /* Cleanup and shutdown */
@@ -109,4 +151,5 @@ int main(void)
     SDL_Quit();
 
     return 0;
+#endif
 }

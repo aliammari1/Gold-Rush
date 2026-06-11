@@ -1,10 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
-#include <SDL/SDL_image.h>
-#include <SDL/SDL_ttf.h>
 
+/* SDL 2 + the legacy-API shim are pulled in via core.h -> types.h. */
 #include "core.h"
 int runConnectFourGame(void)
 {
