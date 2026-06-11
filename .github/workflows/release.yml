@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: gold-rush-linux-x86_64
+          - os: macos-latest
+            asset: gold-rush-macos-arm64
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SDL 1.2 (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            libsdl1.2-dev \
+            libsdl-image1.2-dev \
+            libsdl-mixer1.2-dev \
+            libsdl-ttf2.0-dev
+
+      - name: Install SDL 1.2 (macOS via sdl12-compat)
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install sdl12-compat sdl_image sdl_mixer sdl_ttf
+
+      - name: Build
+        run: make
+
+      - name: Stage release artifact
+        run: |
+          mkdir -p dist/${{ matrix.asset }}
+          cp game dist/${{ matrix.asset }}/
+          cp -r assets dist/${{ matrix.asset }}/
+          cp README.md LICENSE dist/${{ matrix.asset }}/
+          tar -C dist -czf ${{ matrix.asset }}.tar.gz ${{ matrix.asset }}
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.asset }}
+          path: ${{ matrix.asset }}.tar.gz
+
+  release:
+    name: Publish GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*.tar.gz
+          generate_release_notes: true

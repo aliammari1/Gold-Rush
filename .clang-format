@@ -1,0 +1,19 @@
+# clang-format configuration for Gold Rush (C, SDL 1.2).
+# Based on the LLVM style with project conventions: 4-space indent,
+# braces on their own line (Allman) to match the existing C sources.
+---
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 100
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+PointerAlignment: Right
+SpaceAfterCStyleCast: false
+SortIncludes: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+...

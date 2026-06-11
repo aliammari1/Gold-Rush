@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (SDL 1.2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install SDL 1.2 dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential \
+            libsdl1.2-dev \
+            libsdl-image1.2-dev \
+            libsdl-mixer1.2-dev \
+            libsdl-ttf2.0-dev
+      - name: Build with make
+        run: make
+      - name: Verify game binary was produced
+        run: test -x ./game
+
+  unit-tests:
+    name: Unit tests (Connect Four AI)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run SDL-free unit tests (ASan + UBSan)
+        run: make -C tests sanitize
+
+  cppcheck:
+    name: Static analysis (cppcheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install cppcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cppcheck
+      - name: Run cppcheck
+        run: |
+          cppcheck --enable=warning,performance,portability \
+            --inline-suppr --std=c99 --error-exitcode=1 \
+            --suppress=missingIncludeSystem \
+            -i tests/vendor \
+            .
+
+  format:
+    name: clang-format / cpp-linter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run cpp-linter (clang-format + clang-tidy)
+        uses: cpp-linter/cpp-linter-action@v2
+        id: linter
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          style: file
+          tidy-checks: ''
+          files-changed-only: true
+          ignore: 'tests/vendor|assets|docs'
+      - name: Fail if formatting issues were found
+        if: steps.linter.outputs.checks-failed > 0
+        run: |
+          echo "clang-format/clang-tidy reported issues."
+          exit 1
