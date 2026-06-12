@@ -5,48 +5,41 @@
 
 # Gold Rush
 
-A 2D platformer written in **C** with **SDL 1.2**. It pairs a state-machine
-game engine with physics-based movement, an enemy AI, a timed quiz puzzle,
-and a **Connect Four** minigame backed by a depth-limited **alpha-beta
-(minimax)** CPU opponent.
+🎮 **A 2D platformer written in pure C + SDL — plays in your browser via WebAssembly.**
+
+### ▶ [Play in browser](https://gold-rush.pages.dev) &nbsp;·&nbsp; ⬇ [Download](https://github.com/aliammari1/Gold-Rush/releases) &nbsp;·&nbsp; 🎮 [itch.io](https://aliammari1.itch.io/gold-rush) &nbsp;·&nbsp; ⭐ [Star this repo](https://github.com/aliammari1/Gold-Rush)
+
+> The in-browser demo is a **pure-C game compiled to WebAssembly** (Emscripten)
+> hosted on Cloudflare Pages — no install, no toolchain. It is built from the
+> [`feat/sdl2-wasm`](https://github.com/aliammari1/Gold-Rush/tree/feat/sdl2-wasm)
+> branch (`make wasm`), which ports the renderer from SDL 1.2 to SDL 2 +
+> Emscripten; the link goes live once that build is published. See
+> [docs/play-in-browser.md](docs/play-in-browser.md).
 
 [![CI](https://github.com/aliammari1/Gold-Rush/actions/workflows/ci-cpp.yml/badge.svg?branch=master)](https://github.com/aliammari1/Gold-Rush/actions/workflows/ci-cpp.yml)
 [![CodeQL](https://github.com/aliammari1/Gold-Rush/actions/workflows/codeql.yml/badge.svg?branch=master)](https://github.com/aliammari1/Gold-Rush/actions/workflows/codeql.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/aliammari1/Gold-Rush/badge)](https://scorecard.dev/viewer/?uri=github.com/aliammari1/Gold-Rush)
+[![codecov](https://codecov.io/gh/aliammari1/Gold-Rush/branch/master/graph/badge.svg)](https://codecov.io/gh/aliammari1/Gold-Rush)
 [![Language: C](https://img.shields.io/badge/language-C-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
 [![SDL 1.2](https://img.shields.io/badge/SDL-1.2-green.svg)](https://www.libsdl.org/)
 [![License: Zlib](https://img.shields.io/badge/license-Zlib-blue.svg)](LICENSE)
 
+A state-machine game engine with physics-based movement, an enemy AI, a timed
+quiz puzzle, and a **Connect Four** minigame backed by a depth-limited
+**alpha-beta (minimax)** CPU opponent — all in a few thousand lines of plain C.
+
 > **Gameplay GIF:** _coming soon_ — a short capture of the platformer,
-> puzzle, and Connect Four modes will live here.
+> puzzle, and Connect Four modes will live here (see [BANNER.md](BANNER.md)).
 
 ## Play it
 
-Three ways to play — **no toolchain required for the first two:**
+Three one-click ways to play — **no toolchain required:**
 
-### Play in browser (WebAssembly)
-
-The headline demo is a **pure-C game compiled to WebAssembly** and hosted on
-**Cloudflare Pages** — it plays directly in the browser, no install.
-
-**Play now:** _coming soon_ — `https://gold-rush.pages.dev`
-
-> The browser build is produced from the `feat/sdl2-wasm` branch, which ports
-> the renderer from SDL 1.2 to **SDL 2 + Emscripten** (`make wasm`). It must
-> be compiled from that branch before the link goes live — see
-> [docs/play-in-browser.md](docs/play-in-browser.md).
-
-### Download a binary (Releases)
-
-Prebuilt **Linux** and **macOS** binaries are published for every tagged
-version on the [Releases](https://github.com/aliammari1/Gold-Rush/releases)
-page (built by the [release workflow](.github/workflows/release.yml)).
-
-### itch.io
-
-Gold Rush is cross-posted to **[itch.io](https://aliammari1.itch.io/gold-rush)**
-— the WebAssembly build runs in itch's HTML5 player and the native tarballs
-are downloadable there. Publishing is automated with `butler` via the
-[itch.io workflow](.github/workflows/itch.yml).
+| | How | Notes |
+|---|---|---|
+| ▶ **Browser (WASM)** | [gold-rush.pages.dev](https://gold-rush.pages.dev) | Pure C → WebAssembly, hosted on Cloudflare Pages. The hero demo. Built from [`feat/sdl2-wasm`](https://github.com/aliammari1/Gold-Rush/tree/feat/sdl2-wasm). |
+| ⬇ **Download** | [Releases](https://github.com/aliammari1/Gold-Rush/releases) | Prebuilt **Linux** + **macOS** tarballs per tag, with [SLSA build provenance](https://github.com/aliammari1/Gold-Rush/attestations) (verify with `gh attestation verify`). Built by the [release workflow](.github/workflows/release.yml). |
+| 🎮 **itch.io** | [aliammari1.itch.io/gold-rush](https://aliammari1.itch.io/gold-rush) | WASM build runs in itch's HTML5 player; native tarballs downloadable. Auto-published with `butler` ([itch workflow](.github/workflows/itch.yml)). |
 
 Or build it yourself from source (below).
 
@@ -154,16 +147,17 @@ Built with Material for MkDocs (`mkdocs serve`, sources in `docs/`):
 ## Community & sharing
 
 Gold Rush is a small, self-contained example of a **pure-C game that plays
-in the browser** — handy as a learning reference or a starting point.
+in the browser** — handy as a learning reference or a starting point. Launch
+plan, topics, and submission kit live in [GROWTH.md](GROWTH.md).
 
-- **Topics:** `gamedev` · `sdl` · `c` · `platformer` · `indie-game`
-  (set under the repo's About panel for discoverability).
-- **Show it off:** the "pure C, plays in browser" angle suits a
-  _Show HN_ post and an [r/gamedev](https://www.reddit.com/r/gamedev/)
-  share once the WASM demo is live.
-- **awesome-c:** a candidate for the *Games* section of
-  [awesome-c](https://github.com/oz123/awesome-c) — submit once the browser
-  demo and a gameplay GIF are published.
+- **Topics:** `gamedev` · `sdl` · `c` · `platformer` · `wasm` · `emscripten`
+  · `indie-game` · `2d-game` (set under the repo's About panel).
+- **Show it off:** the "pure C, plays in browser" angle suits a _Show HN_ post
+  and shares to [r/gamedev](https://www.reddit.com/r/gamedev/) /
+  [r/C_Programming](https://www.reddit.com/r/C_Programming/) — see GROWTH.md.
+- **awesome-c / awesome-sdl:** a candidate for the *Games* sections of
+  [awesome-c](https://github.com/oz123/awesome-c) and
+  [awesome-sdl](https://github.com/0n3m4n/awesome-sdl).
 
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the
 C coding standards and how to add levels and enemies.
@@ -175,3 +169,16 @@ Released under the [Zlib license](LICENSE).
 ## Author
 
 **Ali Ammari** — [@aliammari1](https://github.com/aliammari1)
+
+---
+
+### Related projects
+
+- 🎮 **Games:** [games](https://github.com/aliammari1/games) — browser games
+  incl. an unbeatable minimax tic-tac-toe.
+- 🧠 **AI / apps:** [JobPrep](https://github.com/aliammari1/JobPrep) ·
+  [readrealm](https://github.com/aliammari1/readrealm) ·
+  [pulmocare](https://github.com/aliammari1/pulmocare)
+- 📊 **Dev tools:** [github-traffic-analytics](https://github.com/aliammari1/github-traffic-analytics)
+  · [awesome-ai-tools](https://github.com/aliammari1/awesome-ai-tools)
+- 👤 **All projects:** [github.com/aliammari1](https://github.com/aliammari1)
