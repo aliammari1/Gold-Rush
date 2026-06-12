@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #ifndef UI_H
 #define UI_H
 

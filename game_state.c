@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #include "game_state.h"
 #include "config.h"
 #include <string.h>

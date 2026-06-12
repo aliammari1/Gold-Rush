@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #include <stdlib.h>
 #include <stdio.h>
 #include <SDL/SDL.h>
@@ -6,7 +7,48 @@
 #include <SDL/SDL_ttf.h>
 
 #include "core.h"
+#include "connect4_ai.h"
+
+/**
+ * @brief Pick the CPU's move with depth-limited alpha-beta minimax.
+ *
+ * Bridges the SDL game board (1 = human/red, 2 = CPU/yellow, row 5 at the
+ * bottom) to the SDL-free solver in connect4_ai.c, which shares the exact
+ * same board convention, and returns the landing cell.
+ *
+ * @param board The current 6x7 Connect Four board.
+ * @return The cell the CPU should fill (row/column).
+ */
+GameCell computerMoveMinimax(int board[GAME_BOARD_ROWS][GAME_BOARD_COLS])
+{
+    GameCell cell = {0, 0};
+    int col;
+    int row;
+
+    col = c4_best_move(board, C4_CPU, C4_DEFAULT_DEPTH);
+    if (col < 0) {
+        /* Board full / no move; fall back to the heuristic opponent. */
+        return computerMove(board);
+    }
+
+    /* Find the row the token would land in (lowest empty cell). */
+    for (row = GAME_BOARD_ROWS - 1; row >= 0; row--) {
+        if (board[row][col] == 0) {
+            cell.row = row;
+            cell.column = col;
+            return cell;
+        }
+    }
+    /* Should not happen if c4_best_move returned a playable column. */
+    return computerMove(board);
+}
+
 int runConnectFourGame(void)
+{
+    return runConnectFourGameMode(CONNECT_FOUR_HEURISTIC);
+}
+
+int runConnectFourGameMode(ConnectFourOpponent opponent)
 {
 
     TTF_Init();
@@ -90,7 +132,9 @@ int runConnectFourGame(void)
                     }
                     if ((nb_coups < 22) && (check == 0))
                     {
-                        aiMove = computerMove(gameBoard);
+                        aiMove = (opponent == CONNECT_FOUR_MINIMAX)
+                                     ? computerMoveMinimax(gameBoard)
+                                     : computerMove(gameBoard);
                         gameBoard[aiMove.row][aiMove.column] = 2;
                         renderYellowToken(screen, jaune, aiMove);
                         check = checkWinCondition(gameBoard);
