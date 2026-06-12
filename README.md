@@ -1,6 +1,7 @@
-<!-- TODO: add the western-mining pixel/CRT hero banner here once generated.
-     See BANNER.md and assets/banner/ for the art direction and the
-     1280x640 social-preview spec. -->
+<!-- Hero banner: generate from the prompt in BANNER.md, commit to
+     assets/banner/banner-wide.png, then swap the comment below for:
+     ![Gold Rush](assets/banner/banner-wide.png)
+     (1280x640 social-preview spec also in BANNER.md). -->
 
 # Gold Rush
 
@@ -18,15 +19,36 @@ and a **Connect Four** minigame backed by a depth-limited **alpha-beta
 > **Gameplay GIF:** _coming soon_ — a short capture of the platformer,
 > puzzle, and Connect Four modes will live here.
 
-## Play in browser
+## Play it
 
-A SDL 2 + WebAssembly (Emscripten) build is in progress on the
-`feat/sdl2-wasm` branch and will be hosted on Cloudflare Pages.
+Three ways to play — **no toolchain required for the first two:**
+
+### Play in browser (WebAssembly)
+
+The headline demo is a **pure-C game compiled to WebAssembly** and hosted on
+**Cloudflare Pages** — it plays directly in the browser, no install.
 
 **Play now:** _coming soon_ — `https://gold-rush.pages.dev`
 
-Until then, build natively (below) or grab a prebuilt binary from
-[Releases](https://github.com/aliammari1/Gold-Rush/releases).
+> The browser build is produced from the `feat/sdl2-wasm` branch, which ports
+> the renderer from SDL 1.2 to **SDL 2 + Emscripten** (`make wasm`). It must
+> be compiled from that branch before the link goes live — see
+> [docs/play-in-browser.md](docs/play-in-browser.md).
+
+### Download a binary (Releases)
+
+Prebuilt **Linux** and **macOS** binaries are published for every tagged
+version on the [Releases](https://github.com/aliammari1/Gold-Rush/releases)
+page (built by the [release workflow](.github/workflows/release.yml)).
+
+### itch.io
+
+Gold Rush is cross-posted to **[itch.io](https://aliammari1.itch.io/gold-rush)**
+— the WebAssembly build runs in itch's HTML5 player and the native tarballs
+are downloadable there. Publishing is automated with `butler` via the
+[itch.io workflow](.github/workflows/itch.yml).
+
+Or build it yourself from source (below).
 
 ## Features
 
@@ -128,6 +150,23 @@ Built with Material for MkDocs (`mkdocs serve`, sources in `docs/`):
   separated from rendering.
 - **Cloudflare Pages** for the WASM "play in browser" build and the docs
   site (free tier, no Node burden for the C/MkDocs toolchain).
+
+## Community & sharing
+
+Gold Rush is a small, self-contained example of a **pure-C game that plays
+in the browser** — handy as a learning reference or a starting point.
+
+- **Topics:** `gamedev` · `sdl` · `c` · `platformer` · `indie-game`
+  (set under the repo's About panel for discoverability).
+- **Show it off:** the "pure C, plays in browser" angle suits a
+  _Show HN_ post and an [r/gamedev](https://www.reddit.com/r/gamedev/)
+  share once the WASM demo is live.
+- **awesome-c:** a candidate for the *Games* section of
+  [awesome-c](https://github.com/oz123/awesome-c) — submit once the browser
+  demo and a gameplay GIF are published.
+
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for the
+C coding standards and how to add levels and enemies.
 
 ## License
 

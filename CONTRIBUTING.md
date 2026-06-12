@@ -22,6 +22,29 @@ game; contributions of all sizes are welcome.
 - Keep gameplay logic SDL-free where practical so it can be unit-tested
   (see `connect4_ai.c` as the model).
 
+## Adding content
+
+**A new enemy.** Enemy state and behaviour live in `enemy.c` / `enemy.h`.
+Add the enemy's data to the enemy struct/array, give it an update function
+that moves it relative to the player (see the existing tracking logic), and
+load its sprite from `assets/` by relative path. Keep tunables (speed,
+detection range, damage) in `config.h`.
+
+**A new level / world.** Level geometry and backgrounds are handled in
+`world.c` / `world.h`. Add the parallax background art under `assets/`
+(follow the `back0.jpg`, `back1.jpg` … numbering), register the layer, and
+wire collision/spawn points through the world setup. Reuse the camera and
+minimap code rather than duplicating it.
+
+**A new puzzle question or minigame.** Quiz questions are driven by
+`puzzle.c` / `puzzle_game.c`; the Connect Four minigame lives in
+`minigame.c` with its SDL-free AI in `connect4_ai.c`. Keep any new decision
+logic SDL-free and add a Unity test under `tests/` (the Connect Four suite
+is the model).
+
+After adding content, update [docs/](docs/) and the README controls table if
+the player-facing behaviour changed.
+
 ## Before opening a PR
 
 - `make clean && make` builds with no new warnings.
