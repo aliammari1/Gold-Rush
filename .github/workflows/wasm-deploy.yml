@@ -1,0 +1,76 @@
+name: WASM build & deploy
+
+# Builds the Emscripten/WebAssembly "play in browser" bundle and deploys
+# it to Cloudflare Pages. Gated on the Cloudflare secrets so forks do not
+# fail.
+#
+# NEEDS COMPILE VERIFICATION: the SDL 1.2 -> SDL 2 port on this branch has
+# not yet been compiled against real SDL2/emcc headers. Treat the first
+# successful run of this workflow as the verification gate before merge.
+
+on:
+  push:
+    branches: [feat/sdl2-wasm, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build WebAssembly bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: 3.1.74
+      - name: Build wasm bundle
+        run: make wasm
+      - name: Stage Pages output
+        run: |
+          mkdir -p public
+          cp game.html public/index.html
+          cp game.js game.wasm game.data public/
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-bundle
+          path: public
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Check Cloudflare credentials
+        id: cf
+        run: |
+          if [ -n "${{ secrets.CLOUDFLARE_API_TOKEN }}" ] && \
+             [ -n "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare secrets not set; skipping deploy." >&2
+          fi
+      - uses: actions/download-artifact@v4
+        if: steps.cf.outputs.enabled == 'true'
+        with:
+          name: wasm-bundle
+          path: public
+      - name: Deploy with Wrangler
+        if: steps.cf.outputs.enabled == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy public --project-name=gold-rush

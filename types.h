@@ -4,10 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_ttf.h"
-#include "SDL/SDL_mixer.h"
+/* SDL 2 headers. sdl12_compat_shim.h maps the legacy SDL 1.2 video API
+ * (SDL_SetVideoMode / SDL_Flip / SDL_WM_*) onto SDL 2 so the rest of the
+ * codebase compiles unchanged. */
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include "sdl12_compat_shim.h"
 #include "config.h"
 
 /**
