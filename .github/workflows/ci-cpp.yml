@@ -41,6 +41,26 @@ jobs:
       - name: Build and run SDL-free unit tests (ASan + UBSan)
         run: make -C tests sanitize
 
+  coverage:
+    name: Coverage (Connect Four AI -> Codecov)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends lcov
+      - name: Generate coverage for the SDL-free AI tests
+        run: make -C tests coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@0fb7174895f61a3b6b78fc075e0cd60383518dac # v5
+        with:
+          files: tests/coverage.info
+          flags: connect4-ai
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   cppcheck:
     name: Static analysis (cppcheck)
     runs-on: ubuntu-latest
@@ -67,7 +87,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run cpp-linter (clang-format + clang-tidy)
-        uses: cpp-linter/cpp-linter-action@v2
+        uses: cpp-linter/cpp-linter-action@77c390c5ba9c947ebc185a3e49cc754f1558abb5 # v2
         id: linter
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
