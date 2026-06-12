@@ -52,7 +52,7 @@ jobs:
 
       - name: Set up Emscripten
         if: steps.gate.outputs.enabled == 'true'
-        uses: mymindstorm/setup-emsdk@v14
+        uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021 # v14
 
       - name: Build WebAssembly bundle
         if: steps.gate.outputs.enabled == 'true'
@@ -65,7 +65,7 @@ jobs:
 
       - name: Push html5 build to itch.io
         if: steps.gate.outputs.enabled == 'true'
-        uses: robpc/itchio-upload-action@v1
+        uses: robpc/itchio-upload-action@1e055c51216c50c78a80c07187be16b6e4d886f2 # v1.0.5
         with:
           path: web
           project: ${{ env.ITCH_USER }}/${{ env.ITCH_GAME }}
@@ -121,7 +121,7 @@ jobs:
 
       - name: Push ${{ matrix.channel }} build to itch.io
         if: steps.gate.outputs.enabled == 'true'
-        uses: robpc/itchio-upload-action@v1
+        uses: robpc/itchio-upload-action@1e055c51216c50c78a80c07187be16b6e4d886f2 # v1.0.5
         with:
           path: pkg
           project: ${{ env.ITCH_USER }}/${{ env.ITCH_GAME }}

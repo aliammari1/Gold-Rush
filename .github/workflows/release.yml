@@ -65,14 +65,24 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write
+      # Required to mint SLSA build-provenance attestations for the tarballs.
+      id-token: write
+      attestations: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
 
+      # SLSA build provenance: lets anyone verify the release tarballs were
+      # built by this workflow (gh attestation verify <file> --repo ...).
+      - name: Generate build provenance attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: "artifacts/**/*.tar.gz"
+
       - name: Publish release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           files: artifacts/**/*.tar.gz
           generate_release_notes: true

@@ -20,7 +20,11 @@ INCS := -I$(ROOT) -I$(UNITY)
 
 BIN := test_connect4_ai
 
-.PHONY: all run sanitize clean
+# gcov/lcov instrumentation for the Codecov coverage gate.
+COVFLAGS ?= --coverage -O0 -g
+COVBIN   := test_connect4_ai_cov
+
+.PHONY: all run sanitize coverage clean
 
 all: run
 
@@ -35,5 +39,18 @@ sanitize: $(SRCS)
 	$(CC) $(CFLAGS) $(SANFLAGS) $(INCS) $(SRCS) -o $(BIN)
 	./$(BIN)
 
+# Build + run with gcov instrumentation, then emit coverage.info (lcov format)
+# for upload to Codecov. The report is restricted to connect4_ai.c -- the
+# SDL-free decision logic that the suite actually exercises.
+coverage: $(SRCS)
+	$(CC) -std=c99 $(COVFLAGS) $(INCS) $(SRCS) -o $(COVBIN)
+	./$(COVBIN)
+	gcov -b -o . connect4_ai.gcno || true
+	lcov --capture --directory . --output-file coverage.info \
+	     --rc lcov_branch_coverage=1 2>/dev/null
+	lcov --extract coverage.info '*connect4_ai.c' \
+	     --output-file coverage.info --rc lcov_branch_coverage=1 2>/dev/null
+	lcov --list coverage.info --rc lcov_branch_coverage=1 2>/dev/null || true
+
 clean:
-	rm -f $(BIN)
+	rm -f $(BIN) $(COVBIN) *.gcno *.gcda *.gcov coverage.info
