@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #include "core.h"
 
 /**
@@ -84,10 +85,11 @@ int main(void)
             /* Puzzle game would be called here */
             GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
         }
-        /* Special handling for minigame state */
+        /* Special handling for minigame state: Connect Four vs CPU.
+         * Uses the depth-limited alpha-beta minimax opponent. */
         else if (gameEngine->currentState == STATE_MINIGAME) {
-            /* Minigame would be called here - runConnectFourGame() */
-            GameEngine_SetState(gameEngine, STATE_GAMEPLAY);
+            runConnectFourGameMode(CONNECT_FOUR_MINIMAX);
+            GameEngine_SetState(gameEngine, STATE_MENU);
         }
         /* For menu and settings, use normal rendering */
         else {

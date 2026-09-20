@@ -1,3 +1,4 @@
+/* SPDX-License-Identifier: Zlib */
 #ifndef CORE_H
 #define CORE_H
 

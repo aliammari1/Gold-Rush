@@ -1,0 +1,33 @@
+# Build output
+game
+*.o
+*.obj
+*.exe
+dist/
+pkg/
+web/
+
+# WebAssembly build (feat/sdl2-wasm)
+game.html
+game.js
+game.wasm
+game.data
+
+# MkDocs
+site/
+
+# itch.io / release staging
+*.tar.gz
+
+# Editor / OS cruft
+.DS_Store
+Thumbs.db
+*.swp
+
+# Internal growth/marketing notes (not for public)
+GROWTH.md
+BANNER.md
+SUBMITTING_TO_AWESOME.md
+launch-kit.md
+star-strategy.md
+modernization-backlog.md

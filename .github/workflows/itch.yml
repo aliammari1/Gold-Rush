@@ -1,0 +1,129 @@
+name: Publish to itch.io
+
+# Cross-posts Gold Rush to itch.io with butler:
+#   * the WebAssembly build  -> the "html5" channel (plays in-browser on itch),
+#   * the native tarballs    -> per-OS channels for download.
+#
+# Triggered on version tags (alongside the GitHub Release) or manually.
+# No-ops cleanly when the BUTLER_API_KEY secret is absent, so forks are safe.
+#
+# Setup (one-time):
+#   1. Create the game page on itch.io (e.g. aliammari1/gold-rush).
+#   2. Generate an API key: https://itch.io/user/settings/api-keys
+#   3. Add it as the BUTLER_API_KEY repository secret.
+# Refs:
+#   - https://itch.io/docs/butler/pushing.html
+#   - https://github.com/marketplace/actions/butler-push
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ITCH_USER: aliammari1
+  ITCH_GAME: gold-rush
+
+jobs:
+  # The WASM bundle lives on the feat/sdl2-wasm branch; build it there and
+  # push it to the html5 channel so the game is playable in the itch widget.
+  html5:
+    name: Push WebAssembly build (html5 channel)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for butler credentials
+        id: gate
+        run: |
+          if [ -n "${{ secrets.BUTLER_API_KEY }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "BUTLER_API_KEY not set; skipping itch.io publish." >&2
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.enabled == 'true'
+        with:
+          ref: feat/sdl2-wasm
+
+      - name: Set up Emscripten
+        if: steps.gate.outputs.enabled == 'true'
+        uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021 # v14
+
+      - name: Build WebAssembly bundle
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          make wasm
+          mkdir -p web
+          # itch.io serves index.html; emit/rename the entry point accordingly.
+          cp game.html web/index.html 2>/dev/null || true
+          cp game.* web/ 2>/dev/null || true
+
+      - name: Push html5 build to itch.io
+        if: steps.gate.outputs.enabled == 'true'
+        uses: robpc/itchio-upload-action@1e055c51216c50c78a80c07187be16b6e4d886f2 # v1.0.5
+        with:
+          path: web
+          project: ${{ env.ITCH_USER }}/${{ env.ITCH_GAME }}
+          channel: html5
+          api-key: ${{ secrets.BUTLER_API_KEY }}
+
+  # Cross-post the native release tarballs built by release.yml.
+  natives:
+    name: Push native builds
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            channel: linux
+          - os: macos-latest
+            channel: mac
+    steps:
+      - name: Check for butler credentials
+        id: gate
+        run: |
+          if [ -n "${{ secrets.BUTLER_API_KEY }}" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "BUTLER_API_KEY not set; skipping itch.io publish." >&2
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.enabled == 'true'
+
+      - name: Install SDL 1.2 (Linux)
+        if: steps.gate.outputs.enabled == 'true' && runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential libsdl1.2-dev libsdl-image1.2-dev \
+            libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+
+      - name: Install SDL 1.2 (macOS via sdl12-compat)
+        if: steps.gate.outputs.enabled == 'true' && runner.os == 'macOS'
+        run: brew install sdl12-compat sdl_image sdl_mixer sdl_ttf
+
+      - name: Build and stage
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          make
+          mkdir -p pkg
+          cp game pkg/
+          cp -r assets pkg/
+          cp README.md LICENSE pkg/
+
+      - name: Push ${{ matrix.channel }} build to itch.io
+        if: steps.gate.outputs.enabled == 'true'
+        uses: robpc/itchio-upload-action@1e055c51216c50c78a80c07187be16b6e4d886f2 # v1.0.5
+        with:
+          path: pkg
+          project: ${{ env.ITCH_USER }}/${{ env.ITCH_GAME }}
+          channel: ${{ matrix.channel }}
+          api-key: ${{ secrets.BUTLER_API_KEY }}
